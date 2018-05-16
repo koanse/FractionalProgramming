@@ -1,0 +1,414 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1251">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 11">
+<meta name=Originator content="Microsoft Word 11">
+<link rel=File-List href="Help.files/filelist.xml">
+<title>Решение задачи линейного программирования модифицированным
+симплекс-методом</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Антон</o:Author>
+  <o:LastAuthor>Антон</o:LastAuthor>
+  <o:Revision>15</o:Revision>
+  <o:TotalTime>60</o:TotalTime>
+  <o:Created>2008-12-21T19:41:00Z</o:Created>
+  <o:LastSaved>2009-01-08T20:58:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>371</o:Words>
+  <o:Characters>2121</o:Characters>
+  <o:Company>ЛИПЕЦК</o:Company>
+  <o:Lines>17</o:Lines>
+  <o:Paragraphs>4</o:Paragraphs>
+  <o:CharactersWithSpaces>2488</o:CharactersWithSpaces>
+  <o:Version>11.5606</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:DrawingGridHorizontalSpacing>3,35 пт</w:DrawingGridHorizontalSpacing>
+  <w:DisplayVerticalDrawingGridEvery>2</w:DisplayVerticalDrawingGridEvery>
+  <w:ValidateAgainstSchemas/>
+  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
+  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
+  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
+  <w:Compatibility>
+   <w:SelectEntireFieldWithStartOrEnd/>
+   <w:UseWord2002TableStyleRules/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:LatentStyles DefLockedState="false" LatentStyleCount="156">
+ </w:LatentStyles>
+</xml><![endif]-->
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-indent:1.0cm;
+	line-height:150%;
+	mso-pagination:none;
+	font-size:14.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h1
+	{mso-style-next:Обычный;
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	text-align:justify;
+	text-indent:1.0cm;
+	line-height:150%;
+	mso-pagination:none;
+	page-break-after:avoid;
+	mso-outline-level:1;
+	font-size:16.0pt;
+	font-family:Arial;
+	mso-font-kerning:16.0pt;}
+h2
+	{mso-style-next:Обычный;
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	text-align:justify;
+	text-indent:1.0cm;
+	line-height:150%;
+	mso-pagination:none;
+	page-break-after:avoid;
+	mso-outline-level:2;
+	font-size:14.0pt;
+	font-family:Arial;
+	font-style:italic;}
+h3
+	{mso-style-next:Обычный;
+	margin-top:12.0pt;
+	margin-right:0cm;
+	margin-bottom:3.0pt;
+	margin-left:0cm;
+	text-align:justify;
+	text-indent:1.0cm;
+	line-height:150%;
+	mso-pagination:none;
+	page-break-after:avoid;
+	mso-outline-level:3;
+	font-size:13.0pt;
+	font-family:Arial;}
+p.MsoToc1, li.MsoToc1, div.MsoToc1
+	{mso-style-update:auto;
+	mso-style-noshow:yes;
+	mso-style-next:Обычный;
+	margin:0cm;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-indent:1.0cm;
+	line-height:150%;
+	mso-pagination:none;
+	font-size:14.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.MsoToc2, li.MsoToc2, div.MsoToc2
+	{mso-style-update:auto;
+	mso-style-noshow:yes;
+	mso-style-next:Обычный;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:14.0pt;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-indent:1.0cm;
+	line-height:150%;
+	mso-pagination:none;
+	font-size:14.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.MsoToc3, li.MsoToc3, div.MsoToc3
+	{mso-style-update:auto;
+	mso-style-noshow:yes;
+	mso-style-next:Обычный;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:28.0pt;
+	margin-bottom:.0001pt;
+	text-align:justify;
+	text-indent:1.0cm;
+	line-height:150%;
+	mso-pagination:none;
+	font-size:14.0pt;
+	mso-bidi-font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:purple;
+	text-decoration:underline;
+	text-underline:single;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+@page Section1
+	{size:595.3pt 841.9pt;
+	margin:42.55pt 1.0cm 2.0cm 3.0cm;
+	mso-header-margin:35.45pt;
+	mso-footer-margin:35.45pt;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:35858052;
+	mso-list-type:hybrid;
+	mso-list-template-ids:1339741968 1500170934 68747289 68747291 68747279 68747289 68747291 68747279 68747289 68747291;}
+@list l0:level1
+	{mso-level-tab-stop:46.35pt;
+	mso-level-number-position:left;
+	margin-left:46.35pt;
+	text-indent:-18.0pt;}
+@list l0:level2
+	{mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level3
+	{mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level4
+	{mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level5
+	{mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level6
+	{mso-level-tab-stop:216.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level7
+	{mso-level-tab-stop:252.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level8
+	{mso-level-tab-stop:288.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l0:level9
+	{mso-level-tab-stop:324.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1
+	{mso-list-id:554269932;
+	mso-list-type:hybrid;
+	mso-list-template-ids:-1701527332 1569228988 68747267 68747269 68747265 68747267 68747269 68747265 68747267 68747269;}
+@list l1:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:70.9pt;
+	mso-level-number-position:left;
+	margin-left:70.9pt;
+	text-indent:-42.55pt;
+	font-family:Symbol;}
+@list l1:level2
+	{mso-level-tab-stop:72.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level3
+	{mso-level-tab-stop:108.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level4
+	{mso-level-tab-stop:144.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level5
+	{mso-level-tab-stop:180.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level6
+	{mso-level-tab-stop:216.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level7
+	{mso-level-tab-stop:252.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level8
+	{mso-level-tab-stop:288.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+@list l1:level9
+	{mso-level-tab-stop:324.0pt;
+	mso-level-number-position:left;
+	text-indent:-18.0pt;}
+ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Обычная таблица";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+table.MsoTableGrid
+	{mso-style-name:"Сетка таблицы";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	border:solid windowtext 1.0pt;
+	mso-border-alt:solid windowtext .5pt;
+	mso-padding-alt:0cm 5.4pt 0cm 5.4pt;
+	mso-border-insideh:.5pt solid windowtext;
+	mso-border-insidev:.5pt solid windowtext;
+	mso-para-margin:0cm;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";
+	mso-ansi-language:#0400;
+	mso-fareast-language:#0400;
+	mso-bidi-language:#0400;}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="5122"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body lang=RU link=blue vlink=purple style='tab-interval:35.4pt'>
+
+<div class=Section1>
+
+<h1>Содержание</h1>
+
+<p class=MsoNormal style='margin-left:1.0cm;text-indent:0cm'>1. Интерфейс
+программы</p>
+
+<p class=MsoNormal style='margin-left:1.0cm;text-indent:0cm'>1.1. Задание
+исходных данных</p>
+
+<p class=MsoNormal style='margin-left:1.0cm;text-indent:0cm'>1.2. Получение
+решения</p>
+
+<p class=MsoNormal style='margin-left:1.0cm;text-indent:0cm'>1.3. Загрузка и
+сохранение условия задачи</p>
+
+<h1><a name="_Toc217670153">Решение задачи дробно-линейного программирования</a><a
+name="_Toc217670154"></a></h1>
+
+<h1><span style='mso-bookmark:_Toc217670154'>Интерфейс программы</span></h1>
+
+<h3><a name="_Toc217670155">1.1. Задание исходных данных</a></h3>
+
+<p class=MsoNormal>Окно программы имеет две вкладки: «Данные» и «Результаты».
+Рассмотрим вкладку «Данные».</p>
+
+<p class=MsoNormal>В поле «Вид задачи» можно задать количество исходных переменных
+(<span lang=EN-US style='mso-ansi-language:EN-US'>x</span><sub>1</sub>, <span
+lang=EN-US style='mso-ansi-language:EN-US'>x</span><sub>2</sub>, …), а также
+количество ограничений-равенств, используемых в программе (учтите, что для
+сведения задачи дробно-линейного программирования к задаче линейного программирования
+дополнительно прозрачно для пользователя вводится одна переменная и одно
+ограничение). Количество переменных должно быть не меньше, чем количество
+ограничений.</p>
+
+<p class=MsoNormal>Флаг «Максимизация» позволяет установить тип оптимизации:
+максимизация или минимизация, причем в случае минимизации целевая функция умножается
+на -1, и производится максимизация.</p>
+
+<p class=MsoNormal>Далее в полях «Коэффициенты числителя целевой функции» и «Коэффициенты
+знаменателя целевой функции» задаются соответствующие коэффициенты при
+переменных <span lang=EN-US style='mso-ansi-language:EN-US'>x</span><sub>1</sub>,
+<span lang=EN-US style='mso-ansi-language:EN-US'>x</span><sub>2</sub>, … в числителе
+и знаменателе целевой функции. Для выполнения вычислений пустые ячейки должны
+отсутствовать.</p>
+
+<p class=MsoNormal>Данные, вводимые в ячейку, имеют вещественный тип (в
+качестве десятичной точки используйте знак «<span class=GramE>.»</span>).</p>
+
+<p class=MsoNormal>Далее требуется задать матрицу коэффициентов переменных <span
+lang=EN-US style='mso-ansi-language:EN-US'>x<sub>i</sub></span><span
+lang=EN-US> </span>в ограничениях-равенствах. Ограничения имеют следующий вид:</p>
+
+<p class=MsoNormal><span class=SpellE><span lang=EN-US style='mso-ansi-language:
+EN-US'>a<sub>i</sub></span></span><sub>1</sub><span lang=EN-US
+style='mso-ansi-language:EN-US'>x</span><sub>1</sub> + <span class=SpellE><span
+lang=EN-US style='mso-ansi-language:EN-US'>a<sub>i</sub></span></span><sub>2</sub><span
+lang=EN-US style='mso-ansi-language:EN-US'>x</span><sub>2</sub> + … + <span
+class=SpellE><span lang=EN-US style='mso-ansi-language:EN-US'>a<sub>im</sub>x<sub>m</sub></span></span>
+= <span lang=EN-US style='mso-ansi-language:EN-US'>b<sub>i</sub></span><sub><o:p></o:p></sub></p>
+
+<p class=MsoNormal>(<span class=SpellE><span lang=EN-US style='mso-ansi-language:
+EN-US'>i</span></span><span lang=EN-US> </span>= 1, 2, …, <span lang=EN-US
+style='mso-ansi-language:EN-US'>n</span>, где <span lang=EN-US
+style='mso-ansi-language:EN-US'>n</span><span lang=EN-US> </span>– количество
+ограничений)</p>
+
+<h3><a name="_Toc217670156">1.2. Получение решения</a></h3>
+
+<p class=MsoNormal>Для получения решения требуется в главном меню выбрать пункт
+«Вычисления», и далее «Вычислить». Появится диалоговое окно, в котором нужно
+поставить галочки напротив номеров тех переменных, которые будут составлять
+начальный базис. После успешного выбора начального базиса выполняются
+вычисления, и по окончании активируется вкладка «Результаты».</p>
+
+<p class=MsoNormal>Слева представлены номера итераций, в скобках указано
+значение целевой функции, а также отмечено, допустимо ли решение на данной
+итерации. При выборе конкретной итерации из списка на панели справа появляется
+детальное описание итерации (см. также теоретический материал).</p>
+
+<h3><a name="_Toc217670157">1.3. Загрузка и сохранение условия задачи</a></h3>
+
+<p class=MsoNormal>Для загрузки условия задачи в главном меню выберете пункт
+«Файл», и далее «Открыть».</p>
+
+<p class=MsoNormal>Для сохранения условия задачи в главном меню выберете пункт
+«Файл», и далее «Сохранить».</p>
+
+<p class=MsoNormal>Файл задачи – текстовый файл, в котором записаны все
+необходимые данные для восстановления условия задачи. Формат текстового файла
+стандартен и понятен без пояснений.</p>
+
+</div>
+
+</body>
+
+</html>
